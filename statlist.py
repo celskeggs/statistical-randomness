@@ -190,7 +190,7 @@ Fisticuffs
 Chuckaboos
 Security Clearance
 Notoriety
-Purity Score
+Impurity Score
 Equity
 Congruity
 Animal Magnetism

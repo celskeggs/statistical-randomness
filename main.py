@@ -28,9 +28,14 @@ def main(stdscr):
     sidepanel = curses.newwin(STATS_HEIGHT, SIDEPANEL_WIDTH, offset_y + 1, offset_x + 1 + CONSOLE_WIDTH + 1)
     ability_panel = curses.newwin(ABILITY_HEIGHT, SIDEPANEL_WIDTH, offset_y + STATS_HEIGHT + 2, offset_x + 1 + CONSOLE_WIDTH + 1)
 
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
+
     stdscr.addstr(offset_y, offset_x, "=" * FULL_WIDTH)
     stdscr.addstr(offset_y + FULL_HEIGHT - 1, offset_x, "=" * FULL_WIDTH)
-    stdscr.addstr(offset_y + STATS_HEIGHT + 1, offset_x + CONSOLE_WIDTH + 2, "=" * SIDEPANEL_WIDTH)
+    #stdscr.addstr(offset_y + STATS_HEIGHT + 1, offset_x + CONSOLE_WIDTH + 2, "=" * SIDEPANEL_WIDTH)
     for y in range(offset_y + 1, offset_y + FULL_HEIGHT - 1):
         stdscr.addch(y, offset_x, "|")
         stdscr.addch(y, offset_x + CONSOLE_WIDTH + 1, "|")
@@ -40,7 +45,13 @@ def main(stdscr):
     while True:
         sidepanel.clear()
         for line, (stat_name, stat_value) in enumerate(logic.get_significant_stats(STATS_HEIGHT)):
-            sidepanel.addstr(line, 0, stat_name.rjust(33) + ":%5d" % stat_value)
+            if(stat_value>0):
+              color = 1
+            elif(stat_value<0):
+              color = 2
+            else:
+              color = 0
+            sidepanel.addstr(line, 0, stat_name.rjust(33) + ":%5d" % stat_value,curses.color_pair(color))
         sidepanel.refresh()
 
         readout.clear()
@@ -70,7 +81,8 @@ def main(stdscr):
 
         ability_panel.clear()
         if(main_option != None):
-          ability_panel.addstr(main_option+"\nDESCRIPTION PLACEHOLDER")
+          ability_panel.addstr(" " + main_option.upper() + " ",curses.color_pair(3))
+          ability_panel.addstr("\nDESCRIPTION PLACEHOLDER")
         ability_panel.refresh()
 
         wrapped_option_lines = textwrap.wrap(" ".join(('|' if x is None else x) for x in disp_options), CONSOLE_WIDTH)

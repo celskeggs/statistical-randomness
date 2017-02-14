@@ -1,17 +1,17 @@
 import curses
+import logic
 import textwrap
 
 SIDEPANEL_WIDTH = 40
 CONSOLE_WIDTH = 100
 INPUT_HEIGHT = 4
-MAIN_HEIGHT = 50
+DISPLAY_HEIGHT = 45
+MAIN_HEIGHT = INPUT_HEIGHT + 1 + DISPLAY_HEIGHT
 FULL_HEIGHT = 1 + MAIN_HEIGHT + 1
 FULL_WIDTH = 1 + SIDEPANEL_WIDTH + 1 + CONSOLE_WIDTH + 1
 
 displayed = ["A line #%d" % i for i in range(10)]
 currently_typed = ""
-all_options = ["beta", "gamma", "delta", "alpha"]
-
 
 def main(stdscr):
     global lines, currently_typed, displayed
@@ -19,7 +19,7 @@ def main(stdscr):
 
     offset_y, offset_x = (curses.LINES - FULL_HEIGHT) // 2, (curses.COLS - FULL_WIDTH) // 2
 
-    readout = curses.newwin(MAIN_HEIGHT - INPUT_HEIGHT, CONSOLE_WIDTH, offset_y + 1, offset_x + 1)
+    readout = curses.newwin(DISPLAY_HEIGHT, CONSOLE_WIDTH, offset_y + 1, offset_x + 1)
     readin = curses.newwin(INPUT_HEIGHT, CONSOLE_WIDTH, offset_y + 1 + MAIN_HEIGHT - INPUT_HEIGHT, offset_x + 1)
     sidepanel = curses.newwin(MAIN_HEIGHT, SIDEPANEL_WIDTH, offset_y + 1, offset_x + 1 + CONSOLE_WIDTH + 1)
 
@@ -33,10 +33,11 @@ def main(stdscr):
 
     while True:
         readout.clear()
-        for i, line in enumerate(displayed):
+        for i, line in enumerate(([""] * DISPLAY_HEIGHT + displayed)[-DISPLAY_HEIGHT:]):
             readout.addstr(i, 0, line)
         readout.refresh()
         readin.clear()
+        all_options = logic.currently_available_options()
         if currently_typed:
             best_options = [option for option in all_options if option.lower().startswith(currently_typed.lower())]
             relevant_options = [option for option in all_options if

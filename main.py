@@ -9,6 +9,8 @@ DISPLAY_HEIGHT = 45
 MAIN_HEIGHT = INPUT_HEIGHT + 1 + DISPLAY_HEIGHT
 FULL_HEIGHT = 1 + MAIN_HEIGHT + 1
 FULL_WIDTH = 1 + SIDEPANEL_WIDTH + 1 + CONSOLE_WIDTH + 1
+ABILITY_HEIGHT = 5
+STATS_HEIGHT = MAIN_HEIGHT - ABILITY_HEIGHT - 1
 
 displayed = ["A line #%d" % i for i in range(10)]
 currently_typed = ""
@@ -25,6 +27,7 @@ def main(stdscr):
 
     stdscr.addstr(offset_y, offset_x, "=" * FULL_WIDTH)
     stdscr.addstr(offset_y + FULL_HEIGHT - 1, offset_x, "=" * FULL_WIDTH)
+    stdscr.addstr(offset_y + STATS_HEIGHT + 1, offset_x + CONSOLE_WIDTH + 2, "=" * SIDEPANEL_WIDTH)
     for y in range(offset_y + 1, offset_y + FULL_HEIGHT - 1):
         stdscr.addch(y, offset_x, "|")
         stdscr.addch(y, offset_x + CONSOLE_WIDTH + 1, "|")

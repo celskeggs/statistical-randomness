@@ -1,4 +1,5 @@
 import curses
+import abilities
 import logic
 import textwrap
 

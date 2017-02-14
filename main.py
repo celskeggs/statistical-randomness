@@ -13,6 +13,7 @@ FULL_WIDTH = 1 + SIDEPANEL_WIDTH + 1 + CONSOLE_WIDTH + 1
 displayed = ["A line #%d" % i for i in range(10)]
 currently_typed = ""
 
+
 def main(stdscr):
     global lines, currently_typed, displayed
     assert curses.LINES >= FULL_HEIGHT and curses.COLS >= FULL_WIDTH
@@ -32,10 +33,16 @@ def main(stdscr):
     stdscr.refresh()
 
     while True:
+        sidepanel.clear()
+        for line, (stat_name, stat_value) in enumerate(logic.get_significant_stats(MAIN_HEIGHT)):
+            sidepanel.addstr(line, 0, stat_name.rjust(33) + ":%5d" % stat_value)
+        sidepanel.refresh()
+
         readout.clear()
         for i, line in enumerate(([""] * DISPLAY_HEIGHT + displayed)[-DISPLAY_HEIGHT:]):
             readout.addstr(i, 0, line)
         readout.refresh()
+
         readin.clear()
         all_options = logic.currently_available_options()
         if currently_typed:
@@ -60,8 +67,8 @@ def main(stdscr):
 
         for i, line in enumerate((wrapped_option_lines + ["", "", ""])[:3]):
             readin.addstr(i, 0, line)
-        readin.addstr(INPUT_HEIGHT - 1, 0,
-                      "[%2d/%2d] ==> %s" % (len(disp_options) - disp_options.count(None), len(all_options), currently_typed))
+        readin.addstr(INPUT_HEIGHT - 1, 0, "[%2d/%2d] ==> %s" % (len(disp_options) - disp_options.count(None),
+                                                                 len(all_options), currently_typed))
         key = readin.getkey()
         if key == "\x1b":
             break

@@ -24,7 +24,8 @@ def main(stdscr):
 
     readout = curses.newwin(DISPLAY_HEIGHT, CONSOLE_WIDTH, offset_y + 1, offset_x + 1)
     readin = curses.newwin(INPUT_HEIGHT, CONSOLE_WIDTH, offset_y + 1 + MAIN_HEIGHT - INPUT_HEIGHT, offset_x + 1)
-    sidepanel = curses.newwin(MAIN_HEIGHT, SIDEPANEL_WIDTH, offset_y + 1, offset_x + 1 + CONSOLE_WIDTH + 1)
+    sidepanel = curses.newwin(STATS_HEIGHT, SIDEPANEL_WIDTH, offset_y + 1, offset_x + 1 + CONSOLE_WIDTH + 1)
+    ability_panel = curses.newwin(ABILITY_HEIGHT, SIDEPANEL_WIDTH, offset_y + STATS_HEIGHT + 2, offset_x + 1 + CONSOLE_WIDTH + 1)
 
     stdscr.addstr(offset_y, offset_x, "=" * FULL_WIDTH)
     stdscr.addstr(offset_y + FULL_HEIGHT - 1, offset_x, "=" * FULL_WIDTH)
@@ -37,7 +38,7 @@ def main(stdscr):
 
     while True:
         sidepanel.clear()
-        for line, (stat_name, stat_value) in enumerate(logic.get_significant_stats(MAIN_HEIGHT)):
+        for line, (stat_name, stat_value) in enumerate(logic.get_significant_stats(STATS_HEIGHT)):
             sidepanel.addstr(line, 0, stat_name.rjust(33) + ":%5d" % stat_value)
         sidepanel.refresh()
 
@@ -65,6 +66,11 @@ def main(stdscr):
         else:
             disp_options = all_options
             main_option = None
+
+        ability_panel.clear()
+        if(main_option != None):
+          ability_panel.addstr(main_option+"\nDESCRIPTION PLACEHOLDER")
+        ability_panel.refresh()
 
         wrapped_option_lines = textwrap.wrap(" ".join(('|' if x is None else x) for x in disp_options), CONSOLE_WIDTH)
 

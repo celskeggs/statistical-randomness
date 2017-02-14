@@ -70,7 +70,7 @@ def main(stdscr):
         elif key.isprintable():
             currently_typed += key
         elif key == "\n" and main_option:
-            displayed.append("You selected: " + main_option)
+            logic.process_option(main_option, displayed.append)
             currently_typed = ""
 
 
